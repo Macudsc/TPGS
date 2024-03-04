@@ -7,12 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!--<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />-->
   <link rel="stylesheet" href="./libs/leaflet.css" />
-  <link rel="stylesheet" href="./libs/leaflet-measure.css" />
   <!--<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>-->
   <script src="./libs/leaflet.js"></script>
   <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
   <script src="./libs/Yandex.js"></script>
-  <script src="./libs/leaflet-measure.min.js"></script>
   <title>Document</title>
   <!--<style>
     #map {
@@ -75,7 +73,7 @@
     var myMap = L.map('map', {
       center: [55.758442, 37.657614],
       zoom: 14,
-      layers: [yMap]
+      layers: [bm]
     });
 
     //Удаление флага и ссылки на Leaflet
@@ -83,10 +81,10 @@
 
     //Список базовых слоев
     var baseLayers = {
-      'Yandex-karta': yMap,
       'Карта OSM': bm,
       'Карта OSM (Темная)': bmOSMDark,
-      'Спутник google': gSat
+      'Спутник google': gSat,
+      'Yandex-karta': yMap
     };
 
     //Список оверлей-слоев
@@ -97,30 +95,6 @@
     //Переключатель слоёв
     L.control.layers(baseLayers, overlayLayers).addTo(myMap);
 
-
-    //Добавление масштабной линейки
-    L.control.scale({
-      imperial: false,
-      maxWidth: 150,
-      //position: 'bottomRight'
-    }).addTo(myMap);
-
-
-    //Создание элемента интерфейса для проведения измерений по карте
-    var msrCtrl = new L.Control.Measure({
-      localization: 'ru',
-      primaryLenghtUnit: 'kilometers',
-      secondaryLengthUnit: 'meters',
-      primaryAreaUnit: 'hectares',
-      secondaryAreaUnit: 'sqmeters',
-      decPoint: ',',
-      thousandsSep: ' ',
-      activeColor: '#efb41e',
-      completedColor: '#ef611e'
-    });
-
-    //Добавление на карту элемента интерфейса для проведения измерений по карте
-    msrCtrl.addTo(myMap);
   </script>
 
   <!--<script>
