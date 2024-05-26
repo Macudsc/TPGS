@@ -1,10 +1,10 @@
-// Трансляция дорожной обстановки через Яндекс АПИ
-function traffic() {
-  var trafficProvider = new ymaps.traffic.provider.Actual({}, {
-    infoLayerShown: true
-  }); //Надо реализовывать так, как в Яндекс апи
-  trafficProvider.setMap(this._yandex);
-};
+// Создание функции для трансляции дорожной обстановки через Яндекс АПИ
+function traffic() {//+
+  var trafficProvider = new ymaps.traffic.provider.Actual({}, {//+
+    infoLayerShown: true//+
+  });//+
+  trafficProvider.setMap(this._yandex);//+
+};//+
 
 // Перехват контейнера с элементами интерфейса для изменения стилей
 L.Yandex.addInitHook('on', 'load', function () {
@@ -23,94 +23,85 @@ function trafficCtrl() {
     .get('traddicControl').state.set('trafficShown', true);
 }
 
+
+//Создание слоёв
 //создание объекта базовых слоёв
-const bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'),
+const
+  //Карта OSM
+  bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'), //+
+  //Карта OSM (тёмная)
   bmOSMDark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
     attribution: '<i><b>Map by OSM & CartoDB</b></i>'
+  }), //+
+  //Google спутник
+  gSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {//+
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],//+
+    maxZoom: 19,//+
+    attribution: '<i><b>Googe sattelite images</b></i>'//+
+  }),//+
+  //Объекты ООПТ
+  mapOOPT = L.tileLayer.wms('http://lgtgis.aari.ru/arcgis/services/MCPA/PAWMS_lite/MapServer/WMSServer', {//+
+    layers: '0,1',//+
+    format: 'image/png',//+
+    transparent: true,//+
+    attribution: '<i><b>Данные ООПТ</b></i>'//+
   }),
-  gSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    maxZoom: 19,
-    attribution: '<i><b>Googe sattelite images</b></i>'
-  });
-mapOOPT = L.tileLayer.wms('http://lgtgis.aari.ru/arcgis/services/MCPA/PAWMS_lite/MapServer/WMSServer', {
-  layers: '0',
-  format: 'image/png',
-  transparent: true,
-  attribution: '<i><b>Данные ООПТ</b></i>'
-}),
-
+  //Yandex карта
   yMap = L.yandex('map'),
+  //Яндекс пробки
   yTraffic = L.yandex('overlay', {
     attribution: '<i><b>Данные Yandex</b></i>'
-  })
-    .on('load', trafficCtrl), //load activation, вызывает функцию траффик)
+  }).on('load', traffic), //load activation, вызывает функцию траффик)
+  //Яндекс пробки с элементами управления
   yTrafficCtrl = L.yandex('overlay', {
 
   });
 
 
-//map create
-var myMap = L.map('map', {
-  center: [55.758442, 37.657614],
-  zoom: 14,
-  layers: [yMap]
-});
-
+//Базовая карта и слои
+//Создание объекта карты
+var myMap = L.map('map', {//+
+  center: [55.758442, 37.657614],//+
+  zoom: 14,//+
+  layers: [bm] //+ Карта по умолчаннию
+});//+
 //Удаление флага и ссылки на Leaflet
-myMap.attributionControl.setPrefix(false);
-
-//Список базовых слоев
-var baseLayers = {
-  'Yandex-karta': yMap,
-  'Карта OSM': bm,
-  'Карта OSM (Темная)': bmOSMDark,
-  'Спутник google': gSat
-};
-
-//Список оверлей-слоев
-var overlayLayers = {
-  'Объекты ООПТ': mapOOPT,
-  'Яндекс пробки': yTraffic,
-  'Яндекс пробки с элементами управления': yTrafficCtrl
-}
-//Переключатель слоёв
-L.control.layers(baseLayers, overlayLayers).addTo(myMap);
+myMap.attributionControl.setPrefix(false);//+
+//Формирование списка базовых слоев
+var baseLayers = {//+
+  'Карта OSM': bm,//+
+  'Карта OSM (тёмная)': bmOSMDark,//+
+  'Google спутник': gSat,//+
+  'Yandex карта': yMap//+
+};//+
+//Формирование списка оверлей-слоев
+var overlayLayers = {//+
+  'Объекты ООПТ': mapOOPT,//+
+  'Яндекс пробки': yTraffic,//+
+  'Яндекс пробки с элементами управления': yTrafficCtrl//+
+}//+
+//Добавление переключателя слоёв
+L.control.layers(baseLayers, overlayLayers).addTo(myMap);//+
 
 
+//Линейка
 //Добавление масштабной линейки
-L.control.scale({
-  imperial: false,
-  maxWidth: 150,
+L.control.scale({//+
+  imperial: false,//+
+  maxWidth: 150,//+
   //position: 'bottomRight'
-}).addTo(myMap);
-
-
+}).addTo(myMap);//+
 //Создание элемента интерфейса для проведения измерений по карте
-var msrCtrl = new L.Control.Measure({
-  localization: 'ru',
-  primaryLenghtUnit: 'kilometers',
-  secondaryLengthUnit: 'meters',
-  primaryAreaUnit: 'hectares',
-  secondaryAreaUnit: 'sqmeters',
-  decPoint: ',',
-  thousandsSep: ' ',
-  activeColor: '#efb41e',
-  completedColor: '#ef611e'
-});
-
-//Добавление на карту элемента интерфейса для проведения измерений по карте
-//msrCtrl.addTo(myMap);
-//  </script >
-
-//  < !--< script >
-//    var map = L.map('map').setView([51.505, -0.09], 13);
-
-//L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//  maxZoom: 19,
-//}).addTo(map);
-
-//L.marker([51.5, -0.09]).addTo(map)
-//  .bindPopup('Привет, я студент МИИГАИК и мне нравится это!')
-//  .openPopup();
-//  </ > -->
+var msrCtrl = new L.Control.Measure({//+
+  localization: 'ru',//+
+  primaryLenghtUnit: 'kilometers',//+
+  secondaryLengthUnit: 'meters',//+
+  primaryAreaUnit: 'hectares',//+
+  secondaryAreaUnit: 'sqmeters',//+
+  decPoint: ',',//+
+  thousandsSep: ' ',//+
+  activeColor: '#efb41e',//+
+  completedColor: '#ef611e'//+
+});//+
+//Добавление элемента интерфейса для проведения измерений по карте
+msrCtrl.addTo(myMap)//+
