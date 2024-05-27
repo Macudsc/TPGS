@@ -1,3 +1,4 @@
+//Просмотр пробок от Яндекс
 // Создание функции для трансляции дорожной обстановки через Яндекс АПИ
 function traffic() {//+
   var trafficProvider = new ymaps.traffic.provider.Actual({}, {//+
@@ -5,23 +6,21 @@ function traffic() {//+
   });//+
   trafficProvider.setMap(this._yandex);//+
 };//+
-
 // Перехват контейнера с элементами интерфейса для изменения стилей
-L.Yandex.addInitHook('on', 'load', function () {
-  this._setStyle(this._yandex.controls.getContainer(), {
-    width: 'auto',
-    right: '50px',
-    top: '11px'
-  });
-});
-
+L.Yandex.addInitHook('on', 'load', function () {//+
+  this._setStyle(this._yandex.controls.getContainer(), {//+
+    width: 'auto',//+
+    right: '50px',//+
+    top: '11px'//+
+  });//+
+});//+
 //Создание функции для трансляции дорожной обстановки через Yandex API с элементами управления
-function trafficCtrl() {
-  this._yandex.controls
-    .add('trafficControl', { size: 'auto' })
-    //.add('typeSelector', { size: 'auto' })
-    .get('traddicControl').state.set('trafficShown', true);
-}
+function trafficCtrl() {//+
+  this._yandex.controls//+
+    .add('trafficControl', { size: 'auto' })//+
+    //.add('typeSelector', { size: 'auto' })//+
+    .get('traddicControl').state.set('trafficShown', true)//+
+};//+
 
 
 //Создание слоёв
@@ -45,17 +44,17 @@ const
     format: 'image/png',//+
     transparent: true,//+
     attribution: '<i><b>Данные ООПТ</b></i>'//+
-  }),
+  }),//+
   //Yandex карта
-  yMap = L.yandex('map'),
+  yMap = L.yandex('map'),//+
   //Яндекс пробки
-  yTraffic = L.yandex('overlay', {
-    attribution: '<i><b>Данные Yandex</b></i>'
+  yTraffic = L.yandex('overlay', {//+
+    attribution: '<i><b>Данные Yandex</b></i>'//+
   }).on('load', traffic), //load activation, вызывает функцию траффик)
   //Яндекс пробки с элементами управления
-  yTrafficCtrl = L.yandex('overlay', {
-
-  });
+  yTrafficCtrl = L.yandex('overlay', {//+
+    attribution: '<i><b>Данные Yandex</b></i>'
+  }).on('load', trafficCtrl);//+
 
 
 //Базовая карта и слои
@@ -104,4 +103,4 @@ var msrCtrl = new L.Control.Measure({//+
   completedColor: '#ef611e'//+
 });//+
 //Добавление элемента интерфейса для проведения измерений по карте
-msrCtrl.addTo(myMap)//+
+msrCtrl.addTo(myMap);//+
