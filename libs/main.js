@@ -22,7 +22,6 @@ function trafficCtrl() {//+
     .get('traddicControl').state.set('trafficShown', true)//+
 };//+
 
-
 //Создание слоёв
 //создание объекта базовых слоёв
 const
@@ -56,14 +55,67 @@ const
     attribution: '<i><b>Данные Yandex</b></i>'
   }).on('load', trafficCtrl);//+
 
+//Создание собственного экземпляра класса на основе Icon
+var rwStIcn = L.Icon.extend({
+  options: {
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -23]
+  }
+});
+
+//Формирование массива иконок на основе собственного класса rwStIcn
+var rwStIcns = [
+  new rwStIcn({ iconUrl: 'data/icons/railway-station_yng.png' }),
+  new rwStIcn({ iconUrl: 'data/icons/railway-station_avg.png' }),
+  new rwStIcn({ iconUrl: 'data/icons/railway-station_old.png' })
+];
+
+////Создание своей иконки
+//const railwayStIcn = L.icon({
+//  iconUrl: 'data/icons/railway-station.png',
+//  iconSize: [32, 32],
+//  iconAnchor: [16, 32],
+//  popupAnchor: [0, -23]
+//});
+//Агрегация точечных объектов в один слой
+const railwayStations = L.layerGroup([
+  //Создание точечных объектов на местности
+  L.marker([55.757344, 37.660779], { //#1
+    title: 'Курский вокзал',
+    icon: rwStIcns[0],
+    //opacity: 0.5
+  })
+    .bindPopup('<b>Название вокзала: </b><i>Курский вокзал</i><br><img src="data/photos/kur.jpg" width=250px height=155px>'),
+  L.marker([55.776748, 37.657313], { //#3
+    title: 'Ярославский вокзал',
+    icon: rwStIcns[2]
+  })
+    .bindPopup('<b>Название вокзала: </b><i>Ярославский вокзал</i><br><img src="data/photos/yar.jpeg" width=250px height=px>'),
+  L.marker([55.773550, 37.656401], { //#2
+    title: 'Казанский вокзал',
+    icon: rwStIcns[1],
+    //zIndexOffset: -500
+  })
+    .bindPopup('<b>Название вокзала: </b><i>Казанский вокзал</i><br><img src="data/photos/kaz.jpg" width=250px height=px>'),
+]);
 
 //Базовая карта и слои
 //Создание объекта карты
 var myMap = L.map('map', {//+
-  center: [55.758442, 37.657614],//+
+  center: [55.763700, 37.661723],//+
   zoom: 14,//+
   layers: [bm] //+ Карта по умолчаннию
 });//+
+/*
+//Создание точечных объектов на местности
+L.marker([55.757344, 37.660779], {
+  title: 'Курский вокзал',
+  icon: railwayStIcn
+})
+  .bindPopup('<b>Название вокзала: </b><i>Курский вокзал</i><br><img src="data/photos/kur.jpg" width=250px height=155px>')
+  .addTo(myMap);
+*/
 //Удаление флага и ссылки на Leaflet
 myMap.attributionControl.setPrefix(false);//+
 //Формирование списка базовых слоев
@@ -77,11 +129,11 @@ var baseLayers = {//+
 var overlayLayers = {//+
   'Объекты ООПТ': mapOOPT,//+
   'Яндекс пробки': yTraffic,//+
-  'Яндекс пробки с элементами управления': yTrafficCtrl//+
+  'Яндекс пробки с элементами управления': yTrafficCtrl,//+
+  'ЖД вокзалы Москвы': railwayStations
 }//+
 //Добавление переключателя слоёв
 L.control.layers(baseLayers, overlayLayers).addTo(myMap);//+
-
 
 //Линейка
 //Добавление масштабной линейки
@@ -104,3 +156,17 @@ var msrCtrl = new L.Control.Measure({//+
 });//+
 //Добавление элемента интерфейса для проведения измерений по карте
 msrCtrl.addTo(myMap);//+
+
+//Создание линейного объекта
+L.polyline([[55.757344, 37.660779],
+[55.776748, 37.657313],
+[55.773550, 37.656401], [55.757344, 37.660779]
+], {
+  color: 'green',
+  weight: 2,
+  lineCap: 'round',
+  lineJoin: 'round',
+  stroke: true,
+  //dashOffset: 3,
+  dashArray: "10 7"
+}).addTo(myMap);
