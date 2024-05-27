@@ -1,0 +1,2 @@
+ID;ParkingName;ParkingZoneNumber;AdmArea;District;Address;CarCapacity;CarCapacityDisabled;Tariffs;global_id;geoData;geodata_center;latitude;longitude
+32473;Парковка №3005 (225);3005;Центральный административный округ;Мещанский район;Пантелеевская улица, дом 53;14;3;nested data;2608626177;{coordinates=[[[37.641687, 55.78806], [37.641998, 55.787222]]], type=MultiLineString};{coordinates=[37.641687, 55.78806], type=Point};37.641687;55.78806
