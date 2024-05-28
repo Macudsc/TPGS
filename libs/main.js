@@ -91,6 +91,27 @@ const railwayStations = L.layerGroup([
   })
     .bindPopup('<b>Название вокзала: </b><i>Казанский вокзал</i><br><img src="data/photos/kaz.jpg" width=250px height=px>'),
 ]);
+// Добавление данных из GeoJSON-файла на карту
+const aquaparkyLayer = L.geoJSON(aquaparksMsk, {
+  pointToLayer: function (feature, latlng) {
+    let wifi = feature.properties.HasWifi,
+      disability = feature.properties.DisabilityFriendly;
+    wifi == 'нет' && disability == 'не приспособлен' ? icn = rwStIcns[2] :
+      wifi == 'да' && disability == 'частично приспособлен' ? icn = rwStIcns[0] :
+        icn = rwStIcns[1];
+    return L.marker(latlng, {
+      title: feature.properties.Address,
+      icon: icn
+    })
+  },
+})
+  .bindPopup(function (aquaparksMsk) {
+    let aquaparkPhoto = '';
+    if (aquaparksMsk.feature.properties.photo) { //Как в Groovy
+      aquaparkPhoto = '<img src="data/shapes/aquaparks/photos/' + aquaparksMsk.feature.properties.global_id + '/photo.jpg" width=285px height=214px>'
+    };
+    return '<b>Название: </b><i>' + aquaparksMsk.feature.properties.ObjectName + '</i><br>' + aquaparkPhoto;
+  });
 
 //Базовая карта и слои
 //Создание объекта карты
@@ -99,12 +120,6 @@ var myMap = L.map('map', {//+
   zoom: 14,//+
   layers: [bm] //+ Карта по умолчаннию
 });//+
-
-// Добавление данных из GeoJSON-файла на карту
-L.geoJSON(aquaparksMsk)
-  .bindPopup('<b>Аквапарк: </b>')
-  .addTo(myMap);
-
 //Удаление флага и ссылки на Leaflet
 myMap.attributionControl.setPrefix(false);//+
 //Формирование списка базовых слоев
@@ -119,7 +134,8 @@ var overlayLayers = {//+
   'Объекты ООПТ': mapOOPT,//+
   'Яндекс пробки': yTraffic,//+
   'Яндекс пробки с элементами управления': yTrafficCtrl,//+
-  'ЖД вокзалы Москвы': railwayStations
+  'ЖД вокзалы Москвы': railwayStations,
+  'Открытые Аквапарки Москвы': aquaparkyLayer
 }//+
 //Добавление переключателя слоёв
 L.control.layers(baseLayers, overlayLayers).addTo(myMap);//+

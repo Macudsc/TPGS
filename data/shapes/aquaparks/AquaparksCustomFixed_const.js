@@ -11,7 +11,7 @@ const aquaparksMsk = {
     {
       "type": "Feature",
       "properties": {
-        "global_id": 628676173,
+        "global_id": null,
         "ObjectName": "Аквапарк «Фэнтази»",
         "NameWinter": "Бассейн «Медленная река», в аквапарке Фэнтази",
         "AdmArea": "Юго-Восточный административный округ",
@@ -41,8 +41,8 @@ const aquaparksMsk = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          37.739043,
-          55.65463
+          37.738621739347131,
+          55.654621011084217
         ]
       }
     },
@@ -74,7 +74,8 @@ const aquaparksMsk = {
         "Paid": "платно",
         "DisabilityFriendly": "частично приспособлен",
         "ServicesWinter": "общая физическая подготовка",
-        "geoData": "{coordinates=[37.527184, 55.597246], type=Point}"
+        "geoData": "{coordinates=[37.527184, 55.597246], type=Point}",
+        "photo": true
       },
       "geometry": {
         "type": "Point",
@@ -112,13 +113,14 @@ const aquaparksMsk = {
         "Paid": "платно",
         "DisabilityFriendly": "частично приспособлен",
         "ServicesWinter": "общая физическая подготовка",
-        "geoData": "{coordinates=[37.778443, 55.747844], type=Point}"
+        "geoData": "{coordinates=[37.778443, 55.747844], type=Point}",
+        "photo": true
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          37.778443,
-          55.747844
+          37.778529036593255,
+          55.74788542982435
         ]
       }
     },
@@ -155,8 +157,8 @@ const aquaparksMsk = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          37.739043,
-          55.65463
+          37.738880486434965,
+          55.654422175766456
         ]
       }
     },
@@ -193,8 +195,8 @@ const aquaparksMsk = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          37.739043,
-          55.65463
+          37.739034077686618,
+          55.654693281892321
         ]
       }
     },
@@ -231,8 +233,8 @@ const aquaparksMsk = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          37.778443,
-          55.747844
+          37.778447779810733,
+          55.747720786351714
         ]
       }
     }
