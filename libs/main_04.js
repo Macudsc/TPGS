@@ -99,12 +99,6 @@ var myMap = L.map('map', {//+
   zoom: 14,//+
   layers: [bm] //+ Карта по умолчаннию
 });//+
-
-// Добавление данных из GeoJSON-файла на карту
-L.geoJSON(aquaparksMsk)
-  .bindPopup('<b>Аквапарк: </b>')
-  .addTo(myMap);
-
 //Удаление флага и ссылки на Leaflet
 myMap.attributionControl.setPrefix(false);//+
 //Формирование списка базовых слоев

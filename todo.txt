@@ -1,7 +1,0 @@
-+ 20 точечных объектов в слое
-+ 6 объектов в площадном слое
-+ 6 линейных (забор, дорожка)
-+ Слой для загрузки извне (был .csv)
-
-Мой датасет:
-https://data.mos.ru/opendata/2269?pageSize=10&pageIndex=0&isDynamic=false&version=7&release=110

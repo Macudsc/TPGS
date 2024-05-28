@@ -1,4 +1,4 @@
-{
+const aquaparksMsk = {
   "type": "FeatureCollection",
   "name": "AquaparksCustomFixed",
   "crs": {
