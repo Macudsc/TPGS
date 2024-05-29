@@ -23,11 +23,11 @@ function trafficCtrl() {
 };
 
 //Создание слоёв
-//создание объекта базовых слоёв
+// Создание объекта базовых слоёв
 const
-  //Карта OSM
+  // Карта OSM
   bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'),
-  //Карта OSM (тёмная)
+  // Карта OSM (тёмная)
   bmOSMDark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
     attribution: '<i><b>Map by OSM & CartoDB</b></i>'
   }),
@@ -37,28 +37,28 @@ const
     maxZoom: 19,
     attribution: '<i><b>Googe sattelite images</b></i>'
   }),
-  //Объекты ООПТ
+  // Объекты ООПТ
   mapOOPT = L.tileLayer.wms('http://lgtgis.aari.ru/arcgis/services/MCPA/PAWMS_lite/MapServer/WMSServer', {
     layers: '0,1',
     format: 'image/png',
     transparent: true,
     attribution: '<i><b>Данные ООПТ</b></i>'
   }),
-  //Yandex карта
+  // Yandex карта
   yMap = L.yandex('map', {
     attribution: '<i><b>yMap</b></i>' // Не прописывали
   }),
-  //Яндекс пробки
+  // Яндекс пробки
   yTraffic = L.yandex('overlay', {
     attribution: '<i><b>Данные Yandex</b></i>'
   }).on('load', traffic), //load activation, вызывает функцию траффик)
-  //Яндекс пробки с элементами управления
+  // Яндекс пробки с элементами управления
   yTrafficCtrl = L.yandex('overlay', {
     attribution: '<i><b>Данные Yandex</b></i>'
   }).on('load', trafficCtrl);
 
 //Иконки и точечные объекты
-//Создание собственного экземпляра класса на основе Icon
+// Создание собственного экземпляра класса на основе Icon
 var rwStIcn = L.Icon.extend({
   options: {
     iconSize: [32, 32],
@@ -66,15 +66,15 @@ var rwStIcn = L.Icon.extend({
     popupAnchor: [0, -23]
   }
 });
-//Формирование массива иконок на основе собственного класса rwStIcn
+// Формирование массива иконок на основе собственного класса rwStIcn
 var rwStIcns = [
   new rwStIcn({ iconUrl: 'data/icons/railway-station_yng.png' }),
   new rwStIcn({ iconUrl: 'data/icons/railway-station_avg.png' }),
   new rwStIcn({ iconUrl: 'data/icons/railway-station_old.png' })
 ];
-//Агрегация точечных объектов в один слой
+// Агрегация точечных объектов в один слой
 const railwayStations = L.layerGroup([
-  //Создание точечных объектов на местности
+  // Создание точечных объектов на местности
   L.marker([55.757344, 37.660779], { //#1
     title: 'Курский вокзал',
     icon: rwStIcns[0],
@@ -115,41 +115,61 @@ const aquaparkyLayer = L.geoJSON(aquaparksMsk, {
     return '<b>Название: </b><i>' + aquaparksMsk.feature.properties.ObjectName + '</i><br>' + aquaparkPhoto;
   });
 
+//Кластеризация
+// Реализация кластеризации слоя с аквапарками
+//  Создание сущности с заранее определенными настройками кластеризации
+const clusterAquaparks = L.markerClusterGroup({
+  maxClusterRadius: 300,
+  disableClusteringAtZoom: 16, // оптимально 16
+  spiderLegPolylineOptions: {
+    weight: 3,
+    color: '#8400ff',
+    opacity: 0.8
+  },
+  spiderflyOnMaxZoom: false, //запрет на распадание на составные части
+  zoomToBoundsOnClick: true, //Увеличить масштаб, щелкнув по кнопке
+  showCoverageOnHover: true, //показывать Площадь покрытия При Наведении Курсора
+  removeOutsideVisibleBounds: true //убрать невидимые за экраном объекты
+});
+//  Добавление в сущность объектов из слоя аквапарка
+clusterAquaparks.addLayer(aquaparkyLayer);
+
 //Базовая карта и слои
-//Создание объекта карты
+// Создание объекта карты
 var myMap = L.map('map', {
   center: [55.763700, 37.661723],
-  zoom: 14,
+  zoom: 11, // было 14
   layers: [bm] // Карта по умолчаннию
 });
-//Удаление флага и ссылки на Leaflet
+// Удаление флага и ссылки на Leaflet
 myMap.attributionControl.setPrefix(false);
-//Формирование списка базовых слоев
+// Формирование списка базовых слоев
 var baseLayers = {
   'Карта OSM': bm,
   'Карта OSM (тёмная)': bmOSMDark,
   'Google спутник': gSat,
   'Yandex карта': yMap
 };
-//Формирование списка оверлей-слоев
+// Формирование списка оверлей-слоев
 var overlayLayers = {
   'Объекты ООПТ': mapOOPT,
   'Яндекс пробки': yTraffic,
   'Яндекс пробки с элементами управления': yTrafficCtrl,
   'ЖД вокзалы Москвы': railwayStations,
-  'Открытые Аквапарки Москвы': aquaparkyLayer
+  'Открытые Аквапарки Москвы': aquaparkyLayer,
+  'Открытые Аквапарки Москвы (кластеризованные)': clusterAquaparks
 }
-//Добавление переключателя слоёв
+// Добавление переключателя слоёв
 L.control.layers(baseLayers, overlayLayers).addTo(myMap);
 
 //Линейка
-//Добавление масштабной линейки
+// Добавление масштабной линейки
 L.control.scale({
   imperial: false,
   maxWidth: 150,
   //position: 'bottomRight'
 }).addTo(myMap);
-//Создание элемента интерфейса для проведения измерений по карте
+// Создание элемента интерфейса для проведения измерений по карте
 var msrCtrl = new L.Control.Measure({
   localization: 'ru',
   primaryLenghtUnit: 'kilometers',
@@ -161,7 +181,7 @@ var msrCtrl = new L.Control.Measure({
   activeColor: '#efb41e',
   completedColor: '#ef611e'
 });
-//Добавление элемента интерфейса для проведения измерений по карте
+// Добавление элемента интерфейса для проведения измерений по карте
 msrCtrl.addTo(myMap);
 
 /*
@@ -191,16 +211,29 @@ L.polygon([[55.757344, 37.660779],
 var lgnd = L.control({
   position: 'bottomright'
 });
+// Наполнение элемента интерфейса "Легенда"
 lgnd.onAdd = function (myMap) {
   let lgndDiv = L.DomUtil.create('div', 'mapLgnd'),
     labels = [];
+  L.DomEvent
+    .disableScrollPropagation(lgndDiv)
+    .disableClickPropagation(lgndDiv);
   labels.push('<center><b>Легенда для слоя с аквапарками</b></center>');
   //labels.push('');
   labels.push('<img src="data/icons/railway-station_yng.png" height="14" width="14"> - Аквапарки с Wi-Fi и удобством для инвалидов');
-  labels.push('<img src="data/icons/railway-station_avg.png" height="14" width="14"> - Аквапарки с Wi-Fi или с удобствами для инвалидов');
+  labels.push('<img src="data/icons/railway-station_avg.png" height="14" width="14"> - Аквапарки с Wi-Fi или с удобством для инвалидов');
   labels.push('<img src="data/icons/railway-station_old.png" height="14" width="14"> - Аквапарки без Wi-Fi и удобств для инвалидов');
   lgndDiv.innerHTML = labels.join('<br>');
   return lgndDiv
 };
 // Добавление элемента интерфейса "Легенда" на карту
-lgnd.addTo(myMap);
+//lgnd.addTo(myMap);
+// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя aquaparkyLayer
+function lgndAdd() {
+  lgnd.addTo(myMap);
+};
+function lgndRemove() {
+  lgnd.remove(myMap);
+};
+aquaparkyLayer.on('add', lgndAdd);
+aquaparkyLayer.on('remove', lgndRemove);

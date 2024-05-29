@@ -185,3 +185,35 @@ L.polygon([[55.757344, 37.660779],
   dashArray: "10 7"
 }).addTo(myMap);
 */
+
+//Легенда
+// Создание нового элемента интерфейса "Легенда"
+var lgnd = L.control({
+  position: 'bottomright'
+});
+// Наполнение элемента интерфейса "Легенда"
+lgnd.onAdd = function (myMap) {
+  let lgndDiv = L.DomUtil.create('div', 'mapLgnd'),
+    labels = [];
+  L.DomEvent
+    .disableScrollPropagation(lgndDiv)
+    .disableClickPropagation(lgndDiv);
+  labels.push('<center><b>Легенда для слоя с аквапарками</b></center>');
+  //labels.push('');
+  labels.push('<img src="data/icons/railway-station_yng.png" height="14" width="14"> - Аквапарки с Wi-Fi и удобством для инвалидов');
+  labels.push('<img src="data/icons/railway-station_avg.png" height="14" width="14"> - Аквапарки с Wi-Fi или с удобствами для инвалидов');
+  labels.push('<img src="data/icons/railway-station_old.png" height="14" width="14"> - Аквапарки без Wi-Fi и удобств для инвалидов');
+  lgndDiv.innerHTML = labels.join('<br>');
+  return lgndDiv
+};
+// Добавление элемента интерфейса "Легенда" на карту
+//lgnd.addTo(myMap);
+// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя aquaparkyLayer
+function lgndAdd() {
+  lgnd.addTo(myMap);
+};
+function lgndRemove() {
+  lgnd.remove(myMap);
+};
+aquaparkyLayer.on('add', lgndAdd);
+aquaparkyLayer.on('remove', lgndRemove);

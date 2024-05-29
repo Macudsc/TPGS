@@ -15,3 +15,5 @@ L.marker([55.757344, 37.660779], {
   .bindPopup('<b>Название вокзала: </b><i>Курский вокзал</i><br><img src="data/photos/kur.jpg" width=250px height=155px>')
   .addTo(myMap);
 */
+
+//clusterAquaparks.addTo(myMap);

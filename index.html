@@ -8,8 +8,12 @@
   <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
   <script src="./libs/Yandex.js"></script>
   <script src="./libs/leaflet-measure.min.js"></script>
+  <script src="libs/leaflet.markercluster.js"></script>
+  <!--<script src="libs/leaflet.markercluster.js.map"></script>-->
   <link rel="stylesheet" href="./libs/leaflet.css" />
   <link rel="stylesheet" href="./libs/leaflet-measure.css" />
+  <link rel="stylesheet" href="libs/MarkerCluster.css">
+  <link rel="stylesheet" href="libs/MarkerCluster.Default.css">
   <style>
     html,
     body,
@@ -20,9 +24,11 @@
     }
 
     .mapLgnd {
-      background: rgba(151, 164, 146, 0.7);
+      background: rgba(45, 57, 41, 0.85);
       border-radius: 5px;
+      color: wheat;
       padding: 9px;
+      border: thick double #be4b66;
     }
   </style>
 </head>
