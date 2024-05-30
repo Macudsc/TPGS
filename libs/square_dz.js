@@ -14,31 +14,31 @@ var rwStIcns = [
   new rwStIcn({ iconUrl: 'data/icons/railway-station_old.png' })
 ];
 // Добавление данных из GeoJSON-файла на карту
-const dotsdzLayer = L.geoJSON(dotsdzMsk, {
+const squaredzLayer = L.geoJSON(squaredzMsk, {
   pointToLayer: function (feature, latlng) {
-    //let wifi = feature.properties.HasWifi,
-    //  disability = feature.properties.DisabilityFriendly;
-    //wifi == 'нет' && disability == 'не приспособлен' ? icn = rwStIcns[2] :
-    //  wifi == 'да' && disability == 'частично приспособлен' ? icn = rwStIcns[0] :
-    icn = rwStIcns[1];
+    let wifi = feature.properties.HasWifi,
+      disability = feature.properties.DisabilityFriendly;
+    wifi == 'нет' && disability == 'не приспособлен' ? icn = rwStIcns[2] :
+      wifi == 'да' && disability == 'частично приспособлен' ? icn = rwStIcns[0] :
+        icn = rwStIcns[1];
     return L.marker(latlng, {
       title: feature.properties.Address,
       icon: icn
     })
   },
 })
-  .bindPopup(function (dotsdzMsk) {
-    let dotsdzPhoto = '';
-    //if (dotsdzMsk.feature.properties.photo) { //Как в Groovy
-    //  dotsdzPhoto = '<img src="data/shapes/aquaparks/photos/' + dotsdzMsk.feature.properties.global_id + '/photo.jpg" width=285px height=214px>'
-    //};
-    return '<b>Название: </b><i>' + dotsdzMsk.feature.properties.ObjectName + '</i><br>' + dotsdzPhoto;
+  .bindPopup(function (squaredzMsk) {
+    let aquaparkPhoto = '';
+    if (squaredzMsk.feature.properties.photo) { //Как в Groovy
+      aquaparkPhoto = '<img src="data/shapes/aquaparks/photos/' + squaredzMsk.feature.properties.global_id + '/photo.jpg" width=285px height=214px>'
+    };
+    return '<b>Название: </b><i>' + squaredzMsk.feature.properties.ObjectName + '</i><br>' + aquaparkPhoto;
   });
 
 //Кластеризация
 // Реализация кластеризации слоя с аквапарками
 //  Создание сущности с заранее определенными настройками кластеризации
-//const clusterDotsdz = L.markerClusterGroup({
+//const clusterAquaparks = L.markerClusterGroup({
 //  maxClusterRadius: 300,
 //  disableClusteringAtZoom: 16, // оптимально 16
 //  spiderLegPolylineOptions: {
@@ -52,11 +52,11 @@ const dotsdzLayer = L.geoJSON(dotsdzMsk, {
 //  removeOutsideVisibleBounds: true //убрать невидимые за экраном объекты
 //});
 ////  Добавление в сущность объектов из слоя аквапарка
-//clusterDotsdz.addLayer(dotsdzLayer);
+//clusterAquaparks.addLayer(squaredzLayer);
 
-//Тепловая карта (интенсивности)
-// Реализация слоя тепловой карты
-//  Массив точечных объектов, на основе которых будет строится тепловая карта
+////Тепловая карта (интенсивности)
+//// Реализация слоя тепловой карты
+////  Массив точечных объектов, на основе которых будет строится тепловая карта
 //const heatmapData = {
 //  max: 5,
 //  data: [
@@ -84,35 +84,35 @@ const dotsdzLayer = L.geoJSON(dotsdzMsk, {
 ////  Наполняем слой тепловой карты данными
 //heatmapLayer.setData(heatmapData); // addData добавляется данные сразу
 
-/*
-//Линейный объект или полигон
-//Создание линейного объекта
-L.polygon([[55.757344, 37.660779],
+///*
+////Линейный объект или полигон
+////Создание линейного объекта
 //L.polygon([[55.757344, 37.660779],
-[55.776748, 37.657313],
-[55.773550, 37.656401], [55.757344, 37.660779]
-], {
-  color: 'green',
-  fillColor: 'red',
-  fillOpacity: 0.8,
-  //fillRule: 'nonzero',
-  opacity: 1,
-  weight: 2,
-  lineCap: 'round',
-  lineJoin: 'round',
-  stroke: true,
-  //dashOffset: 3,
-  dashArray: "10 7"
-}).addTo(myMap);
-*/
+////L.polygon([[55.757344, 37.660779],
+//[55.776748, 37.657313],
+//[55.773550, 37.656401], [55.757344, 37.660779]
+//], {
+//  color: 'green',
+//  fillColor: 'red',
+//  fillOpacity: 0.8,
+//  //fillRule: 'nonzero',
+//  opacity: 1,
+//  weight: 2,
+//  lineCap: 'round',
+//  lineJoin: 'round',
+//  stroke: true,
+//  //dashOffset: 3,
+//  dashArray: "10 7"
+//}).addTo(myMap);
+//*/
 
-//Легенда
-// Создание нового элемента интерфейса "Легенда"
-//var lgndDotsdz = L.control({
+////Легенда
+//// Создание нового элемента интерфейса "Легенда"
+//var lgnd = L.control({
 //  position: 'bottomright'
 //});
 //// Наполнение элемента интерфейса "Легенда"
-//lgndDotsdz.onAdd = function (myMap) {
+//lgnd.onAdd = function (myMap) {
 //  let lgndDiv = L.DomUtil.create('div', 'mapLgnd'),
 //    labels = [];
 //  L.DomEvent
@@ -127,15 +127,15 @@ L.polygon([[55.757344, 37.660779],
 //  return lgndDiv
 //};
 //// Добавление элемента интерфейса "Легенда" на карту
-////lgndDotsdz.addTo(myMap);
-//// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя dotsdzLayer
+////lgnd.addTo(myMap);
+//// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя squaredzLayer
 //function lgndAdd() {
-//  lgndDotsdz.addTo(myMap);
+//  lgnd.addTo(myMap);
 //};
 //function lgndRemove() {
-//  lgndDotsdz.remove(myMap);
+//  lgnd.remove(myMap);
 //};
-//dotsdzLayer.on('add', lgndAdd);
-//dotsdzLayer.on('remove', lgndRemove);
-//clusterDotsdz.on('add', lgndAdd);
-//clusterDotsdz.on('remove', lgndRemove);
+//squaredzLayer.on('add', lgndAdd);
+//squaredzLayer.on('remove', lgndRemove);
+//clusterAquaparks.on('add', lgndAdd);
+//clusterAquaparks.on('remove', lgndRemove);
