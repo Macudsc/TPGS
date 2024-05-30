@@ -59,18 +59,24 @@ const
 
 //Иконки и точечные объекты
 // Создание собственного экземпляра класса на основе Icon
-var rwStIcn = L.Icon.extend({
+var oneIcon = L.Icon.extend({
   options: {
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -23]
   }
 });
-// Формирование массива иконок на основе собственного класса rwStIcn
+// Формирование массива иконок на основе собственного класса oneIcon
 var rwStIcns = [
-  new rwStIcn({ iconUrl: 'data/icons/railway-station_yng.png' }),
-  new rwStIcn({ iconUrl: 'data/icons/railway-station_avg.png' }),
-  new rwStIcn({ iconUrl: 'data/icons/railway-station_old.png' })
+  new oneIcon({ iconUrl: 'data/icons/railway-station_yng.png' }),
+  new oneIcon({ iconUrl: 'data/icons/railway-station_avg.png' }),
+  new oneIcon({ iconUrl: 'data/icons/railway-station_old.png' })
+];
+//Иконки для аквапарков
+var aquaIcns = [
+  new oneIcon({ iconUrl: 'data/icons/aquapark_yng.png' }),
+  new oneIcon({ iconUrl: 'data/icons/aquapark_avg.png' }),
+  new oneIcon({ iconUrl: 'data/icons/aquapark_old.png' })
 ];
 // Агрегация точечных объектов в один слой
 const railwayStations = L.layerGroup([
@@ -98,9 +104,9 @@ const aquaparkyLayer = L.geoJSON(aquaparksMsk, {
   pointToLayer: function (feature, latlng) {
     let wifi = feature.properties.HasWifi,
       disability = feature.properties.DisabilityFriendly;
-    wifi == 'нет' && disability == 'не приспособлен' ? icn = rwStIcns[2] :
-      wifi == 'да' && disability == 'частично приспособлен' ? icn = rwStIcns[0] :
-        icn = rwStIcns[1];
+    wifi == 'нет' && disability == 'не приспособлен' ? icn = aquaIcns[2] :
+      wifi == 'да' && disability == 'частично приспособлен' ? icn = aquaIcns[0] :
+        icn = aquaIcns[1];
     return L.marker(latlng, {
       title: feature.properties.Address,
       icon: icn
@@ -251,9 +257,9 @@ lgnd.onAdd = function (myMap) {
     .disableClickPropagation(lgndDiv);
   labels.push('<center><b>Легенда для слоя с аквапарками</b></center>');
   //labels.push('');
-  labels.push('<img src="data/icons/railway-station_yng.png" height="14" width="14"> - Аквапарки с Wi-Fi и удобством для инвалидов');
-  labels.push('<img src="data/icons/railway-station_avg.png" height="14" width="14"> - Аквапарки с Wi-Fi или с удобством для инвалидов');
-  labels.push('<img src="data/icons/railway-station_old.png" height="14" width="14"> - Аквапарки без Wi-Fi и удобств для инвалидов');
+  labels.push('<img src="data/icons/aquapark_yng.png" height="14" width="14"> - Аквапарки с Wi-Fi и удобством для инвалидов');
+  labels.push('<img src="data/icons/aquapark_avg.png" height="14" width="14"> - Аквапарки с Wi-Fi или с удобством для инвалидов');
+  labels.push('<img src="data/icons/aquapark_old.png" height="14" width="14"> - Аквапарки без Wi-Fi и удобств для инвалидов');
   lgndDiv.innerHTML = labels.join('<br>');
   return lgndDiv
 };
