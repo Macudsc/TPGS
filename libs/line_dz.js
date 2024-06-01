@@ -1,12 +1,4 @@
-//Иконки и точечные объекты
-// Создание собственного экземпляра класса на основе Icon
-var linedzIcn = L.Icon.extend({
-  options: {
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -23]
-  }
-});
+// Объекты
 function styleLinedz(feature) {
   let lengthLinedz = feature.properties.Length;
   let color;
@@ -20,7 +12,7 @@ function styleLinedz(feature) {
   return {
     color: color,
     weight: 7,
-    opacity: 0.8
+    opacity: 0.9
   };
 }
 // Добавление данных из GeoJSON-файла на карту

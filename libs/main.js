@@ -46,7 +46,7 @@ const
   }),
   // Yandex карта
   yMap = L.yandex('map', {
-    attribution: '<i><b>yMap</b></i>' // Не прописывали
+    //attribution: '<i><b>yMap</b></i>' // Не прописывали
   }),
   // Яндекс пробки
   yTraffic = L.yandex('overlay', {

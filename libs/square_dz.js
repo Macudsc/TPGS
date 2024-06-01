@@ -1,90 +1,167 @@
-//Иконки и точечные объекты
-// Создание собственного экземпляра класса на основе Icon
-var rwStIcn = L.Icon.extend({
-  options: {
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -23]
+// Объекты
+function styleSquaredz(feature) {
+  let heightSquaredz = feature.properties.height;
+  let color;
+  if (heightSquaredz < 15) {
+    color = '#0bff00';
+  } else if (heightSquaredz >= 15 && heightSquaredz < 40) {
+    color = '#ffc42a';
+  } else {
+    color = '#ff1100';
   }
-});
-// Формирование массива иконок на основе собственного класса rwStIcn
-var rwStIcns = [
-  new rwStIcn({ iconUrl: 'data/icons/railway-station_yng.png' }),
-  new rwStIcn({ iconUrl: 'data/icons/railway-station_avg.png' }),
-  new rwStIcn({ iconUrl: 'data/icons/railway-station_old.png' })
-];
+  return {
+    color: '#8400ff',
+    fillColor: color,
+    weight: 3,
+    opacity: 1,
+    fillOpacity: 0.7
+  };
+}
 // Добавление данных из GeoJSON-файла на карту
 const squaredzLayer = L.geoJSON(squaredzMsk, {
-  pointToLayer: function (feature, latlng) {
-    let wifi = feature.properties.HasWifi,
-      disability = feature.properties.DisabilityFriendly;
-    wifi == 'нет' && disability == 'не приспособлен' ? icn = rwStIcns[2] :
-      wifi == 'да' && disability == 'частично приспособлен' ? icn = rwStIcns[0] :
-        icn = rwStIcns[1];
-    return L.marker(latlng, {
-      title: feature.properties.Address,
-      icon: icn
-    })
-  },
-})
-  .bindPopup(function (squaredzMsk) {
-    let aquaparkPhoto = '';
-    if (squaredzMsk.feature.properties.photo) { //Как в Groovy
-      aquaparkPhoto = '<img src="data/shapes/aquaparks/photos/' + squaredzMsk.feature.properties.global_id + '/photo.jpg" width=285px height=214px>'
-    };
-    return '<b>Название: </b><i>' + squaredzMsk.feature.properties.ObjectName + '</i><br>' + aquaparkPhoto;
-  });
+  style: styleSquaredz, // Применение стиля к полигонам
+  onEachFeature: function (feature, layer) {
+    layer.bindPopup('<b>Адрес: </b><i>' + feature.properties.address + '</i><br><b>Высота здания: </b><i>' + feature.properties.height);
+  }
+});
 
-//Кластеризация
-// Реализация кластеризации слоя с аквапарками
-//  Создание сущности с заранее определенными настройками кластеризации
-//const clusterAquaparks = L.markerClusterGroup({
-//  maxClusterRadius: 300,
-//  disableClusteringAtZoom: 16, // оптимально 16
+////Кластеризация
+//// Функция для создания центральной точки линии
+//function getCenter(coords) {
+//  let latSum = 0, lngSum = 0, numPoints = 0;
+//  coords.forEach(line => {
+//    line.forEach(point => {
+//      lngSum += point[0];
+//      latSum += point[1];
+//      numPoints += 1;
+//    });
+//  });
+//  return [latSum / numPoints, lngSum / numPoints];
+//}
+//// Создание кластера для точек
+//const clusterLinedz = L.markerClusterGroup({
+//  maxClusterRadius: 60,
+//  disableClusteringAtZoom: 16,
 //  spiderLegPolylineOptions: {
 //    weight: 3,
-//    color: '#8400ff',
+//    color: '#000000',
 //    opacity: 0.8
 //  },
-//  spiderflyOnMaxZoom: false, //запрет на распадание на составные части
-//  zoomToBoundsOnClick: true, //Увеличить масштаб, щелкнув по кнопке
-//  showCoverageOnHover: true, //показывать Площадь покрытия При Наведении Курсора
-//  removeOutsideVisibleBounds: true //убрать невидимые за экраном объекты
+//  spiderfyOnMaxZoom: true,
+//  zoomToBoundsOnClick: true,
+//  showCoverageOnHover: true,
+//  removeOutsideVisibleBounds: true
 //});
-////  Добавление в сущность объектов из слоя аквапарка
-//clusterAquaparks.addLayer(squaredzLayer);
+//// Определение цвета иконки на основе длины линии
+//function getIconColor(length) {
+//  if (length == 10) {
+//    return '#00db01'; // Зеленый цвет для длины 10 метров
+//  } else if (length > 10 && length <= 40) {
+//    return '#ff8000'; // Желтый цвет для длины больше 10м и до 40м включительно
+//  } else {
+//    return '#ff4242'; // Красный цвет для длины больше 40м
+//  }
+//}
+//// Добавление точек для кластеризации
+//squaredzMsk.features.forEach(feature => {
+//  const center = getCenter(feature.geometry.coordinates);
+//  const length = feature.properties.Length;
+//  const color = getIconColor(length);
 
-////Тепловая карта (интенсивности)
-//// Реализация слоя тепловой карты
-////  Массив точечных объектов, на основе которых будет строится тепловая карта
-//const heatmapData = {
-//  max: 5,
-//  data: [
-//    { lng: 37.738621739347131, lat: 55.654621011084217, count: 1 },
-//    { lng: 37.738621739347131, lat: 55.654621011084217, count: 1 },
-//    { lng: 37.527184, lat: 55.597246, count: 1 },
-//    { lng: 37.778529036593255, lat: 55.74788542982435, count: 1 },
-//    { lng: 37.738880486434965, lat: 55.654422175766456, count: 1 },
-//    { lng: 37.739034077686618, lat: 55.654693281892321, count: 2 },
-//    { lng: 37.778447779810733, lat: 55.747720786351714, count: 1 }
-//  ]
+//  const marker = L.marker(center, {
+//    title: feature.properties.ObjectName,
+//    icon: L.divIcon({
+//      html: `<div style="background-color: ${color}; border: 2px solid black; width: 10px; height: 10px; transform: rotate(45deg);"></div>`,
+//      className: 'custom-line-marker',
+//      iconSize: [10, 10]
+//    })
+//  });
+
+//  clusterLinedz.addLayer(marker);
+//});
+
+////Легенда
+//var lgndLinedz = L.control({
+//  position: 'bottomright'
+//});
+//// Наполнение элемента интерфейса "Легенда"
+//lgndLinedz.onAdd = function (myMap) {
+//  let lgndDiv = L.DomUtil.create('div', 'LINESmapLgnd'),
+//    labels = [];
+//  L.DomEvent
+//    .disableScrollPropagation(lgndDiv)
+//    .disableClickPropagation(lgndDiv);
+//  labels.push('<center><b>Легенда для слоя с линиями</b></center><br>');
+//  //labels.push('');
+//  labels.push(`
+//  <div style="display: flex; align-items: center;">
+//    <div style="background-color: #00db01; width: 20px; height: 8px; margin-right: 5px;"></div>
+//    <span> - Линия длиной 10 метров</span>
+//  </div>
+//`);
+//  labels.push(`
+//  <div style="display: flex; align-items: center;">
+//    <div style="background-color: #ff8000; width: 20px; height: 8px; margin-right: 5px;"></div>
+//    <span> - Длина линии больше 10м и до 40м включительно</span>
+//  </div>
+//`);
+//  labels.push(`
+//  <div style="display: flex; align-items: center;">
+//    <div style="background-color: #ff4242; width: 20px; height: 8px; margin-right: 5px;"></div>
+//    <span> - Длина линии больше 40м</span>
+//  </div>
+//`);
+//  lgndDiv.innerHTML = labels.join('');
+//  return lgndDiv
 //};
+//// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя squaredzLayer
+//function lgndAdd() {
+//  lgndLinedz.addTo(myMap);
+//};
+//function lgndRemove() {
+//  lgndLinedz.remove(myMap);
+//};
+//squaredzLayer.on('add', lgndAdd);
+//squaredzLayer.on('remove', lgndRemove);
+
+//// Тепловая карта (интенсивности)
+//// Принимает объект GeoJSON и преобразует его в формат тепловой карты
+//function convertGeoJSONToHeatmapData(geojson) {
+//  const heatmapData = [];
+//  // Проходит по всем объектам в GeoJSON, извлекает координаты для каждого объекта и добавляет их в массив heatmapData
+//  geojson.features.forEach(feature => {
+//    const coordinates = feature.geometry.coordinates;
+//    heatmapData.push({
+//      lng: coordinates[0][0][0],
+//      lat: coordinates[0][0][1],
+//      count: 5 // Вес
+//    })
+//  });
+//  return {
+//    max: 5,
+//    data: heatmapData
+//  };
+//}
+//// Преобразуем данные
+//const LINESheatmapData = convertGeoJSONToHeatmapData(squaredzMsk);
 ////  Список настроек для создания поля тепловрй карты
-//const heatmapCfg = {
+//const LINESheatmapCfg = {
 //  "radius": 50,
 //  "scaleRadius": false, //при false радиус в пикселях, иначе коэффициент
-//  "maxOpacity": 0.8,
+//  "maxOpacity": 0.9,
 //  "useLocalExtrema": true,
 //  "latField": 'lat',
 //  "lngField": 'lng',
 //  "valueField": "count"
 //};
 ////  Создание слоя тепловой карты
-//const heatmapLayer = new HeatmapOverlay(heatmapCfg);
+//const LINESheatmapLayer = new HeatmapOverlay(LINESheatmapCfg);
 ////  Наполняем слой тепловой карты данными
-//heatmapLayer.setData(heatmapData); // addData добавляется данные сразу
+//LINESheatmapLayer.setData(LINESheatmapData); // addData добавляется данные сразу
 
-///*
+
+
+//?/*
 ////Линейный объект или полигон
 ////Создание линейного объекта
 //L.polygon([[55.757344, 37.660779],
@@ -105,37 +182,3 @@ const squaredzLayer = L.geoJSON(squaredzMsk, {
 //  dashArray: "10 7"
 //}).addTo(myMap);
 //*/
-
-////Легенда
-//// Создание нового элемента интерфейса "Легенда"
-//var lgnd = L.control({
-//  position: 'bottomright'
-//});
-//// Наполнение элемента интерфейса "Легенда"
-//lgnd.onAdd = function (myMap) {
-//  let lgndDiv = L.DomUtil.create('div', 'mapLgnd'),
-//    labels = [];
-//  L.DomEvent
-//    .disableScrollPropagation(lgndDiv)
-//    .disableClickPropagation(lgndDiv);
-//  labels.push('<center><b>Легенда для слоя с аквапарками</b></center>');
-//  //labels.push('');
-//  labels.push('<img src="data/icons/aquapark_yng.png" height="14" width="14"> - Аквапарки с Wi-Fi и удобством для инвалидов');
-//  labels.push('<img src="data/icons/aquapark_avg.png" height="14" width="14"> - Аквапарки с Wi-Fi или с удобством для инвалидов');
-//  labels.push('<img src="data/icons/aquapark_old.png" height="14" width="14"> - Аквапарки без Wi-Fi и удобств для инвалидов');
-//  lgndDiv.innerHTML = labels.join('<br>');
-//  return lgndDiv
-//};
-//// Добавление элемента интерфейса "Легенда" на карту
-////lgnd.addTo(myMap);
-//// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя squaredzLayer
-//function lgndAdd() {
-//  lgnd.addTo(myMap);
-//};
-//function lgndRemove() {
-//  lgnd.remove(myMap);
-//};
-//squaredzLayer.on('add', lgndAdd);
-//squaredzLayer.on('remove', lgndRemove);
-//clusterAquaparks.on('add', lgndAdd);
-//clusterAquaparks.on('remove', lgndRemove);
