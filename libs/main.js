@@ -25,8 +25,9 @@ function trafficCtrl() {
 //Создание слоёв
 // Создание объекта базовых слоёв
 const
-  // Карта OSM
-  bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'),
+  podlozhka = L.tile
+// Карта OSM
+bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'),
   // Карта OSM (тёмная)
   bmOSMDark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
     attribution: '<i><b>Map by OSM & CartoDB</b></i>'
@@ -175,7 +176,7 @@ heatmapLayer.setData(heatmapData); // addData добавляется данны�
 var myMap = L.map('map', {
   center: [55.763700, 37.661723],
   zoom: 11, // было 14
-  layers: [bm] // Карта по умолчаннию
+  layers: [bm], // Карта по умолчаннию
 });
 // Удаление флага и ссылки на Leaflet
 myMap.attributionControl.setPrefix(false);
@@ -213,7 +214,7 @@ L.control.layers(baseLayers, overlayLayers).addTo(myMap);
 L.control.scale({
   imperial: false,
   maxWidth: 150,
-  //position: 'bottomRight'
+  //position: 'bottomright'
 }).addTo(myMap);
 // Создание элемента интерфейса для проведения измерений по карте
 var msrCtrl = new L.Control.Measure({
@@ -224,8 +225,8 @@ var msrCtrl = new L.Control.Measure({
   secondaryAreaUnit: 'sqmeters',
   decPoint: ',',
   thousandsSep: ' ',
-  activeColor: '#efb41e',
-  completedColor: '#ef611e'
+  activeColor: '#ff8200',
+  completedColor: '#ef611e',
 });
 // Добавление элемента интерфейса для проведения измерений по карте
 msrCtrl.addTo(myMap);
