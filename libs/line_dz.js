@@ -46,9 +46,13 @@ const clusterLinedz = L.markerClusterGroup({
     opacity: 0.8
   },
   spiderfyOnMaxZoom: true,
-  zoomToBoundsOnClick: true,
+  zoomToBoundsOnClick: false,
   showCoverageOnHover: true,
   removeOutsideVisibleBounds: true
+});
+// Обработчик события для клик на кластере
+clusterLinedz.on('clusterclick', function (a) {
+  a.layer.spiderfy();
 });
 // Определение цвета иконки на основе длины линии
 function getIconColor(length) {
@@ -128,11 +132,14 @@ function convertGeoJSONToHeatmapData(geojson) {
   const heatmapData = [];
   // Проходит по всем объектам в GeoJSON, извлекает координаты для каждого объекта и добавляет их в массив heatmapData
   geojson.features.forEach(feature => {
-    const coordinates = feature.geometry.coordinates;
+    //const coordinates = feature.geometry.coordinates;
+    const coordinates = getCenter(feature.geometry.coordinates);
     heatmapData.push({
-      lng: coordinates[0][0][0],
-      lat: coordinates[0][0][1],
-      count: 5 // Вес
+      //lng: coordinates[0][0][0],
+      //lat: coordinates[0][0][1],
+      lng: coordinates[1],
+      lat: coordinates[0],
+      count: 4 // Вес
     })
   });
   return {
@@ -146,7 +153,7 @@ const LINESheatmapData = convertGeoJSONToHeatmapData(linedzMsk);
 const LINESheatmapCfg = {
   "radius": 50,
   "scaleRadius": false, //при false радиус в пикселях, иначе коэффициент
-  "maxOpacity": 0.9,
+  "maxOpacity": 0.85,
   "useLocalExtrema": true,
   "latField": 'lat',
   "lngField": 'lng',

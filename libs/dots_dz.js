@@ -43,9 +43,13 @@ const clusterDotsdz = L.markerClusterGroup({
     opacity: 0.8
   },
   spiderflyOnMaxZoom: false, //запрет на распадание на составные части
-  zoomToBoundsOnClick: true, //Увеличить масштаб, щелкнув по кнопке
+  zoomToBoundsOnClick: false, //Увеличить масштаб, щелкнув по кнопке
   showCoverageOnHover: true, //показывать Площадь покрытия При Наведении Курсора
   removeOutsideVisibleBounds: true //убрать невидимые за экраном объекты
+});
+// Обработчик события для клика на кластер
+clusterDotsdz.on('clusterclick', function (a) {
+  a.layer.spiderfy();
 });
 //  Добавление в сущность объектов из слоя точек
 clusterDotsdz.addLayer(dotsdzLayer);

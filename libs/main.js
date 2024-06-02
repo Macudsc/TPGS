@@ -25,9 +25,10 @@ function trafficCtrl() {
 //Создание слоёв
 // Создание объекта базовых слоёв
 const
-  podlozhka = L.tile
-// Карта OSM
-bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'),
+  //Своя подложка
+  podlozhka = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+  // Карта OSM
+  bm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png'),
   // Карта OSM (тёмная)
   bmOSMDark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
     attribution: '<i><b>Map by OSM & CartoDB</b></i>'
@@ -176,12 +177,13 @@ heatmapLayer.setData(heatmapData); // addData добавляется данны�
 var myMap = L.map('map', {
   center: [55.763700, 37.661723],
   zoom: 11, // было 14
-  layers: [bm], // Карта по умолчаннию
+  layers: [podlozhka], // Карта по умолчаннию
 });
 // Удаление флага и ссылки на Leaflet
 myMap.attributionControl.setPrefix(false);
 // Формирование списка базовых слоев
 var baseLayers = {
+  'Своя подложка': podlozhka,
   'Карта OSM': bm,
   'Карта OSM (тёмная)': bmOSMDark,
   'Google спутник': gSat,
@@ -203,8 +205,8 @@ var overlayLayers = {
   'Линейный уровень дз (кластеризованный)': clusterLinedz,
   'Линейный уровень дз (тепловая карта)': LINESheatmapLayer,
   'Площадной уровень дз': squaredzLayer,
-  //'Точечный уровень дз (кластеризованный)': true,
-  //'Точечный уровень дз (тепловая карта)': true,
+  'Площадной уровень дз (кластеризованный)': clusterSquaredz,
+  'Площадной уровень дз (тепловая карта)': SQUARESheatmapLayer,
 }
 // Добавление переключателя слоёв
 L.control.layers(baseLayers, overlayLayers).addTo(myMap);

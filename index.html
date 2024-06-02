@@ -15,6 +15,8 @@
   <script src="libs/leaflet.markercluster.js"></script>
   <script src="libs/heatmap.min.js"></script>
   <script src="libs/leaflet-heatmap.js"></script>
+  <!-- ! Библиотека для вычисления площади полигона -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
   <link rel="stylesheet" href="./libs/leaflet.css" />
   <link rel="stylesheet" href="./libs/leaflet-measure.css" />
   <link rel="stylesheet" href="libs/MarkerCluster.css">
@@ -53,6 +55,16 @@
       padding: 9px;
       font-size: 14px;
       border: thick double #1b012e;
+      max-width: auto;
+    }
+
+    .SQUARESmapLgnd {
+      background: rgba(0, 69, 218, 0.85);
+      border-radius: 5px;
+      color: rgb(255, 246, 246);
+      padding: 9px;
+      font-size: 14px;
+      border: 6px double #ff8000;
       max-width: auto;
     }
   </style>

@@ -50,7 +50,7 @@ const squaredzMsk = {
       "type": "Feature",
       "properties": {
         "id": 2,
-        "address": "улица Шаболовка, 15, Москва, 119049\n",
+        "address": "улица Шаболовка, 15, Москва, 119049",
         "year": 1964,
         "height": 40
       },
