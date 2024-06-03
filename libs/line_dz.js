@@ -1,4 +1,4 @@
-// Объекты
+// Стилизация линий
 function styleLinedz(feature) {
   let lengthLinedz = feature.properties.Length;
   let color;
@@ -78,7 +78,6 @@ linedzMsk.features.forEach(feature => {
       iconSize: [10, 10]
     })
   });
-
   clusterLinedz.addLayer(marker);
 });
 

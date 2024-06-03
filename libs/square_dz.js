@@ -1,4 +1,4 @@
-// Объекты
+// Стилизация полигонов
 function styleSquaredz(feature) {
   let heightSquaredz = feature.properties.height;
   let color;

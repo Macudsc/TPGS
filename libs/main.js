@@ -19,7 +19,7 @@ function trafficCtrl() {
   this._yandex.controls
     .add('trafficControl', { size: 'auto' })
     //.add('typeSelector', { size: 'auto' })
-    .get('traddicControl').state.set('trafficShown', true)
+    .get('trafficControl').state.set('trafficShown', true)
 };
 
 //Создание слоёв
@@ -41,10 +41,11 @@ const
   }),
   // Объекты ООПТ
   mapOOPT = L.tileLayer.wms('http://lgtgis.aari.ru/arcgis/services/MCPA/PAWMS_lite/MapServer/WMSServer', {
-    layers: '0,1',
-    format: 'image/png',
-    transparent: true,
-    attribution: '<i><b>Данные ООПТ</b></i>'
+    //mapOOPT = L.tileLayer.wms('http://trolleway.nextgis.com/api/resource/988/wms', {
+    //layers: '0,1',
+    format: 'image/png', // формат изображений слоя
+    //transparent: true,
+    attribution: '<i><b>Данные ООПТ</b></i>' // текст "Данные ООПТ"
   }),
   // Yandex карта
   yMap = L.yandex('map', {
@@ -74,12 +75,6 @@ var rwStIcns = [
   new oneIcon({ iconUrl: 'data/icons/railway-station_avg.png' }),
   new oneIcon({ iconUrl: 'data/icons/railway-station_old.png' })
 ];
-//Иконки для аквапарков
-var aquaIcns = [
-  new oneIcon({ iconUrl: 'data/icons/aquapark_yng.png' }),
-  new oneIcon({ iconUrl: 'data/icons/aquapark_avg.png' }),
-  new oneIcon({ iconUrl: 'data/icons/aquapark_old.png' })
-];
 // Агрегация точечных объектов в один слой
 const railwayStations = L.layerGroup([
   // Создание точечных объектов на местности
@@ -101,6 +96,12 @@ const railwayStations = L.layerGroup([
   })
     .bindPopup('<b>Название вокзала: </b><i>Казанский вокзал</i><br><img src="data/photos/kaz.jpg" width=250px height=px>'),
 ]);
+//Иконки для аквапарков
+var aquaIcns = [
+  new oneIcon({ iconUrl: 'data/icons/aquapark_yng.png' }),
+  new oneIcon({ iconUrl: 'data/icons/aquapark_avg.png' }),
+  new oneIcon({ iconUrl: 'data/icons/aquapark_old.png' })
+];
 // Добавление данных из GeoJSON-файла на карту
 const aquaparkyLayer = L.geoJSON(aquaparksMsk, {
   pointToLayer: function (feature, latlng) {
@@ -204,9 +205,9 @@ var overlayLayers = {
   'Линейный уровень дз': linedzLayer,
   'Линейный уровень дз (кластеризованный)': clusterLinedz,
   'Линейный уровень дз (тепловая карта)': LINESheatmapLayer,
-  'Площадной уровень дз': squaredzLayer,
-  'Площадной уровень дз (кластеризованный)': clusterSquaredz,
-  'Площадной уровень дз (тепловая карта)': SQUARESheatmapLayer,
+  'Полигональный уровень дз': squaredzLayer,
+  'Полигональный уровень дз (кластеризованный)': clusterSquaredz,
+  'Полигональный уровень дз (тепловая карта)': SQUARESheatmapLayer,
 }
 // Добавление переключателя слоёв
 L.control.layers(baseLayers, overlayLayers).addTo(myMap);
@@ -214,9 +215,9 @@ L.control.layers(baseLayers, overlayLayers).addTo(myMap);
 //Линейка
 // Добавление масштабной линейки
 L.control.scale({
-  imperial: false,
-  maxWidth: 150,
-  //position: 'bottomright'
+  imperial: false, //Убирает имперские единицы измерения (мили, футы)
+  maxWidth: 150, // максимальная ширина линейки
+  //position: 'bottomright' // смена позиции
 }).addTo(myMap);
 // Создание элемента интерфейса для проведения измерений по карте
 var msrCtrl = new L.Control.Measure({
@@ -232,28 +233,6 @@ var msrCtrl = new L.Control.Measure({
 });
 // Добавление элемента интерфейса для проведения измерений по карте
 msrCtrl.addTo(myMap);
-
-/*
-//Линейный объект или полигон
-//Создание линейного объекта
-L.polygon([[55.757344, 37.660779],
-//L.polygon([[55.757344, 37.660779],
-[55.776748, 37.657313],
-[55.773550, 37.656401], [55.757344, 37.660779]
-], {
-  color: 'green',
-  fillColor: 'red',
-  fillOpacity: 0.8,
-  //fillRule: 'nonzero',
-  opacity: 1,
-  weight: 2,
-  lineCap: 'round',
-  lineJoin: 'round',
-  stroke: true,
-  //dashOffset: 3,
-  dashArray: "10 7"
-}).addTo(myMap);
-*/
 
 //Легенда
 // Создание нового элемента интерфейса "Легенда"
@@ -275,8 +254,6 @@ lgnd.onAdd = function (myMap) {
   lgndDiv.innerHTML = labels.join('<br>');
   return lgndDiv
 };
-// Добавление элемента интерфейса "Легенда" на карту
-//lgnd.addTo(myMap);
 // Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя aquaparkyLayer
 function lgndAdd() {
   lgnd.addTo(myMap);
@@ -286,5 +263,3 @@ function lgndRemove() {
 };
 aquaparkyLayer.on('add', lgndAdd);
 aquaparkyLayer.on('remove', lgndRemove);
-//clusterAquaparks.on('add', lgndAdd);
-//clusterAquaparks.on('remove', lgndRemove);
