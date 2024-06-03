@@ -33,27 +33,6 @@ const dotsdzLayer = L.geoJSON(dotsdzMsk, {
     return '<b>Название: </b><i>' + dotsdzMsk.feature.properties.ObjectName + dotsdzPhoto;
   });
 
-//Кластеризация
-const clusterDotsdz = L.markerClusterGroup({
-  maxClusterRadius: 35,
-  disableClusteringAtZoom: 16, // оптимально 16
-  spiderLegPolylineOptions: {
-    weight: 3,
-    color: 'blue',
-    opacity: 0.8
-  },
-  spiderflyOnMaxZoom: false, //запрет на распадание на составные части
-  zoomToBoundsOnClick: false, //Увеличить масштаб, щелкнув по кнопке
-  showCoverageOnHover: true, //показывать Площадь покрытия При Наведении Курсора
-  removeOutsideVisibleBounds: true //убрать невидимые за экраном объекты
-});
-// Обработчик события для клика на кластер
-clusterDotsdz.on('clusterclick', function (a) {
-  a.layer.spiderfy();
-});
-//  Добавление в сущность объектов из слоя точек
-clusterDotsdz.addLayer(dotsdzLayer);
-
 //Легенда
 var lgndDotsdz = L.control({
   position: 'bottomright'
@@ -82,6 +61,27 @@ function lgndRemove() {
 };
 dotsdzLayer.on('add', lgndAdd);
 dotsdzLayer.on('remove', lgndRemove);
+
+//Кластеризация
+const clusterDotsdz = L.markerClusterGroup({
+  maxClusterRadius: 35,
+  disableClusteringAtZoom: 16, // оптимально 16
+  spiderLegPolylineOptions: {
+    weight: 3,
+    color: 'blue',
+    opacity: 0.8
+  },
+  spiderflyOnMaxZoom: false, //запрет на распадание на составные части
+  zoomToBoundsOnClick: false, //Увеличить масштаб, щелкнув по кнопке
+  showCoverageOnHover: true, //показывать Площадь покрытия При Наведении Курсора
+  removeOutsideVisibleBounds: true //убрать невидимые за экраном объекты
+});
+// Обработчик события для клика на кластер
+clusterDotsdz.on('clusterclick', function (a) {
+  a.layer.spiderfy();
+});
+//  Добавление в сущность объектов из слоя точек
+clusterDotsdz.addLayer(dotsdzLayer);
 
 // Тепловая карта (интенсивности)
 // ! Важное отличие от исходной программы курса. Автоматизация ввода координат

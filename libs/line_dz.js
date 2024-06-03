@@ -23,64 +23,6 @@ const linedzLayer = L.geoJSON(linedzMsk, {
   }
 });
 
-//Кластеризация
-// Функция для создания центральной точки линии
-function getCenter(coords) {
-  let latSum = 0, lngSum = 0, numPoints = 0;
-  coords.forEach(line => {
-    line.forEach(point => {
-      lngSum += point[0];
-      latSum += point[1];
-      numPoints += 1;
-    });
-  });
-  return [latSum / numPoints, lngSum / numPoints];
-}
-// Создание кластера для точек
-const clusterLinedz = L.markerClusterGroup({
-  maxClusterRadius: 60,
-  disableClusteringAtZoom: 16,
-  spiderLegPolylineOptions: {
-    weight: 3,
-    color: '#000000',
-    opacity: 0.8
-  },
-  spiderfyOnMaxZoom: true,
-  zoomToBoundsOnClick: false,
-  showCoverageOnHover: true,
-  removeOutsideVisibleBounds: true
-});
-// Обработчик события для клик на кластере
-clusterLinedz.on('clusterclick', function (a) {
-  a.layer.spiderfy();
-});
-// Определение цвета иконки на основе длины линии
-function getIconColor(length) {
-  if (length == 10) {
-    return '#00db01'; // Зеленый цвет для длины 10 метров
-  } else if (length > 10 && length <= 40) {
-    return '#ff8000'; // Желтый цвет для длины больше 10м и до 40м включительно
-  } else {
-    return '#ff4242'; // Красный цвет для длины больше 40м
-  }
-}
-// Добавление точек для кластеризации
-linedzMsk.features.forEach(feature => {
-  const center = getCenter(feature.geometry.coordinates);
-  const length = feature.properties.Length;
-  const color = getIconColor(length);
-
-  const marker = L.marker(center, {
-    title: feature.properties.ObjectName,
-    icon: L.divIcon({
-      html: `<div style="background-color: ${color}; border: 2px solid black; width: 10px; height: 10px; transform: rotate(45deg);"></div>`,
-      className: 'custom-line-marker',
-      iconSize: [10, 10]
-    })
-  });
-  clusterLinedz.addLayer(marker);
-});
-
 //Легенда
 var lgndLinedz = L.control({
   position: 'bottomright'
@@ -124,6 +66,63 @@ function lgndRemove() {
 };
 linedzLayer.on('add', lgndAdd);
 linedzLayer.on('remove', lgndRemove);
+
+//Кластеризация
+//* Функция для создания центральной точки линии
+function getCenter(coords) {
+  let latSum = 0, lngSum = 0, numPoints = 0;
+  coords.forEach(line => {
+    line.forEach(point => {
+      lngSum += point[0];
+      latSum += point[1];
+      numPoints += 1;
+    });
+  });
+  return [latSum / numPoints, lngSum / numPoints];
+}
+// Создание кластера для точек
+const clusterLinedz = L.markerClusterGroup({
+  maxClusterRadius: 60,
+  disableClusteringAtZoom: 16,
+  spiderLegPolylineOptions: {
+    weight: 3,
+    color: '#000000',
+    opacity: 0.8
+  },
+  spiderfyOnMaxZoom: true,
+  zoomToBoundsOnClick: false,
+  showCoverageOnHover: true,
+  removeOutsideVisibleBounds: true
+});
+// Обработчик события для клик на кластере
+clusterLinedz.on('clusterclick', function (a) {
+  a.layer.spiderfy();
+});
+// Определение цвета иконки в кластере на основе длины линии
+function getIconColor(length) {
+  if (length == 10) {
+    return '#00db01'; // Зеленый цвет для длины 10 метров
+  } else if (length > 10 && length <= 40) {
+    return '#ff8000'; // Желтый цвет для длины больше 10м и до 40м включительно
+  } else {
+    return '#ff4242'; // Красный цвет для длины больше 40м
+  }
+}
+// Добавление точек для кластеризации
+linedzMsk.features.forEach(feature => {
+  const center = getCenter(feature.geometry.coordinates);
+  const length = feature.properties.Length;
+  const color = getIconColor(length);
+  const marker = L.marker(center, {
+    title: feature.properties.ObjectName,
+    icon: L.divIcon({
+      html: `<div style="background-color: ${color}; border: 2px solid black; width: 10px; height: 10px; transform: rotate(45deg);"></div>`,
+      className: 'custom-line-marker',
+      iconSize: [10, 10]
+    })
+  });
+  clusterLinedz.addLayer(marker);
+});
 
 // Тепловая карта (интенсивности)
 // Принимает объект GeoJSON и преобразует его в формат тепловой карты

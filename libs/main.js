@@ -40,9 +40,10 @@ const
     attribution: '<i><b>Googe sattelite images</b></i>'
   }),
   // Объекты ООПТ
-  mapOOPT = L.tileLayer.wms('http://lgtgis.aari.ru/arcgis/services/MCPA/PAWMS_lite/MapServer/WMSServer', {
-    //mapOOPT = L.tileLayer.wms('http://trolleway.nextgis.com/api/resource/988/wms', {
+  //mapOOPT = L.tileLayer.wms('http://lgtgis.aari.ru/arcgis/services/MCPA/PAWMS_lite/MapServer/WMSServer', {
+  mapOOPT = L.tileLayer.wms('http://trolleway.nextgis.com/api/resource/988/wms', {
     //layers: '0,1',
+    layers: 'oopt_russia_2011',
     format: 'image/png', // формат изображений слоя
     //transparent: true,
     attribution: '<i><b>Данные ООПТ</b></i>' // текст "Данные ООПТ"
@@ -177,7 +178,7 @@ heatmapLayer.setData(heatmapData); // addData добавляется данны�
 // Создание объекта карты
 var myMap = L.map('map', {
   center: [55.763700, 37.661723],
-  zoom: 11, // было 14
+  zoom: 11, // было 14, чем больше, тем ближе
   layers: [podlozhka], // Карта по умолчаннию
 });
 // Удаление флага и ссылки на Leaflet

@@ -29,6 +29,50 @@ const squaredzLayer = L.geoJSON(squaredzMsk, {
   }
 });
 
+//Легенда
+var lgndSquaredz = L.control({
+  position: 'bottomright'
+});
+// Наполнение элемента интерфейса "Легенда"
+lgndSquaredz.onAdd = function (myMap) {
+  let lgndDiv = L.DomUtil.create('div', 'SQUARESmapLgnd'),
+    labels = [];
+  L.DomEvent
+    .disableScrollPropagation(lgndDiv)
+    .disableClickPropagation(lgndDiv);
+  labels.push('<center><b>Легенда для слоя с полигонами</b></center><br>');
+  //labels.push('');
+  labels.push(`
+  <div style="display: flex; align-items: center;">
+    <div style="background-color: #0bff00; width: 8px; height: 14px; margin-right: 5px;"></div>
+    <span> - Высота здания меньше 15м</span>
+  </div>
+`);
+  labels.push(`
+  <div style="display: flex; align-items: center;">
+    <div style="background-color: #ffc42a; width: 8px; height: 14px; margin-right: 5px;"></div>
+    <span> - Высота здания больше и равна 15м и меньше 40м</span>
+  </div>
+`);
+  labels.push(`
+  <div style="display: flex; align-items: center;">
+    <div style="background-color: #ff1100; width: 8px; height: 14px; margin-right: 5px;"></div>
+    <span> - Высота здания больше или равна 40м</span>
+  </div>
+`);
+  lgndDiv.innerHTML = labels.join('');
+  return lgndDiv
+};
+// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя squaredzLayer
+function lgndAdd() {
+  lgndSquaredz.addTo(myMap);
+};
+function lgndRemove() {
+  lgndSquaredz.remove(myMap);
+};
+squaredzLayer.on('add', lgndAdd);
+squaredzLayer.on('remove', lgndRemove);
+
 //Кластеризация
 //* Функция для получения центральной точки полигона
 function getCenter(coords) {
@@ -84,50 +128,6 @@ squaredzMsk.features.forEach(feature => {
   });
   clusterSquaredz.addLayer(marker);
 });
-
-//Легенда
-var lgndSquaredz = L.control({
-  position: 'bottomright'
-});
-// Наполнение элемента интерфейса "Легенда"
-lgndSquaredz.onAdd = function (myMap) {
-  let lgndDiv = L.DomUtil.create('div', 'SQUARESmapLgnd'),
-    labels = [];
-  L.DomEvent
-    .disableScrollPropagation(lgndDiv)
-    .disableClickPropagation(lgndDiv);
-  labels.push('<center><b>Легенда для слоя с полигонами</b></center><br>');
-  //labels.push('');
-  labels.push(`
-  <div style="display: flex; align-items: center;">
-    <div style="background-color: #0bff00; width: 8px; height: 14px; margin-right: 5px;"></div>
-    <span> - Высота здания меньше 15м</span>
-  </div>
-`);
-  labels.push(`
-  <div style="display: flex; align-items: center;">
-    <div style="background-color: #ffc42a; width: 8px; height: 14px; margin-right: 5px;"></div>
-    <span> - Высота здания больше и равна 15м и меньше 40м</span>
-  </div>
-`);
-  labels.push(`
-  <div style="display: flex; align-items: center;">
-    <div style="background-color: #ff1100; width: 8px; height: 14px; margin-right: 5px;"></div>
-    <span> - Высота здания больше или равна 40м</span>
-  </div>
-`);
-  lgndDiv.innerHTML = labels.join('');
-  return lgndDiv
-};
-// Реализация возможности отображения/скрытия легенды интерфейса "Легенда" при выборе слоя squaredzLayer
-function lgndAdd() {
-  lgndSquaredz.addTo(myMap);
-};
-function lgndRemove() {
-  lgndSquaredz.remove(myMap);
-};
-squaredzLayer.on('add', lgndAdd);
-squaredzLayer.on('remove', lgndRemove);
 
 // Тепловая карта (интенсивности)
 // Принимает объект GeoJSON и преобразует его в формат тепловой карты
